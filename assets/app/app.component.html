@@ -1,1 +1,8 @@
-<h1>Hello World!</h1>
+<div class="container">
+   <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+         <!-- $event contains the value passed through the event -->
+         <app-message [inputMessage]="message" (outputMessage)="message.content = $event"></app-message>
+      </div>
+   </div>
+</div>
