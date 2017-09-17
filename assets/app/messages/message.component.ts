@@ -1,11 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { Message } from "./message.model";
+import { Message } from './message.model';
 
 @Component({
    selector: 'app-message',
    templateUrl: './message.component.html',
-   styles: [`
+   styles: [
+      `
    .author {
       display: inline-block;
       font-style: italic;
@@ -18,11 +19,13 @@ import { Message } from "./message.model";
       font-size: 12px;
       width: 19%
    }
-`]
+`
+   ]
 })
 
 export class MessageComponent {
-   @Input('inputMessage') message: Message
+   // @Input - Assignable from outside
+   @Input('inputMessage') messageFromAppComponent: Message
    @Output('outputMessage') editClicked = new EventEmitter<string>()
 
    onEdit() {
