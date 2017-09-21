@@ -37,5 +37,8 @@ export class MessageComponent {
 
    onDelete() {
       this.messageService.deleteMessage(this.messageFromAppComponent)
+         .subscribe(
+         result => console.log(result)
+         )
    }
 }
