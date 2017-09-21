@@ -1,5 +1,6 @@
 <div class="col-md-8 col-md-offset-2">
-   <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+   <!-- ngNativeValidate - To use HTML5 native form validation -->
+   <form (ngSubmit)="onSubmit(f)" ngNativeValidate #f="ngForm">
       <div class="form-group">
          <label for="content">Content</label>
          <input type="text" id="content" class="form-control" ngModel name="content" required>

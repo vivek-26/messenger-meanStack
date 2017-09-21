@@ -17,7 +17,7 @@ import { MessageService } from './message.service';
 
 export class MessageListComponent implements OnInit {
 
-   messages: Message[];
+   messages: Message[]
 
    constructor(private messageService: MessageService) { }
 
