@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 
 var appRoutes = require('./routes/app');
 var messageRoutes = require('./routes/messages');
+var userRoutes = require('./routes/user');
 
 var app = express();
 // Connect to mongoDB 
@@ -35,6 +36,7 @@ app.use(function (req, res, next) {
 });
 
 app.use('/message', messageRoutes);
+app.use('/user', userRoutes);
 app.use('/', appRoutes);
 
 // catch 404 and return index page to allow Angular to handle routing
