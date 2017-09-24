@@ -19,8 +19,11 @@ export class MessageService {
       console.log(this.messages)
       const postData = JSON.stringify(message)
       const headers = new Headers({ 'Content-Type': 'application/json' })
+      const token = localStorage.getItem('token')
+         ? `?token=${localStorage.getItem('token')}`
+         : ''
       // .map() returns Observable by default; .catch() doesn't!
-      return this.http.post('http://localhost:3000/message', postData, { headers: headers })
+      return this.http.post(`http://localhost:3000/message${token}`, postData, { headers: headers })
          .map((response: Response) => {
             const resource = response.json().content
             const message = new Message(resource.content, 'Vivek Kumar', resource._id, null)
@@ -54,7 +57,10 @@ export class MessageService {
    updateMessage(message: Message) {
       const postData = JSON.stringify(message)
       const headers = new Headers({ 'Content-Type': 'application/json' })
-      return this.http.patch(`http://localhost:3000/message/${message.messageId}`, postData, { headers: headers })
+      const token = localStorage.getItem('token')
+         ? `?token=${localStorage.getItem('token')}`
+         : ''
+      return this.http.patch(`http://localhost:3000/message/${message.messageId}${token}`, postData, { headers: headers })
          .map((response: Response) => response.json())
          .catch((error: Response) => Observable.throw(error.json()))
    }
@@ -62,7 +68,10 @@ export class MessageService {
    // Delete a message from list of messages
    deleteMessage(message: Message): any {
       this.messages.splice(this.messages.indexOf(message), 1)
-      return this.http.delete(`http://localhost:3000/message/${message.messageId}`)
+      const token = localStorage.getItem('token')
+         ? `?token=${localStorage.getItem('token')}`
+         : ''
+      return this.http.delete(`http://localhost:3000/message/${message.messageId}${token}`)
          .map((response: Response) => response.json())
          .catch((error: Response) => Observable.throw(error.json()))
    }

@@ -5,6 +5,8 @@
  */
 var express = require('express');
 var router = express.Router();
+var jwt = require('jsonwebtoken');
+var User = require('../models/user');
 
 // Import Message Mongoose Model
 var Message = require('../models/message');
@@ -28,13 +30,31 @@ router.get('/', catchAsyncErrors(async function (req, res, next) {
    });
 }));
 
+// Middleware to check if valid JWT token is received
+router.use('/', async function (req, res, next) {
+   try {
+      let decoded = await jwt.verify(req.query.token, 'secret');
+      next();
+   } catch (err) {
+      return res.status(401).json({
+         title: 'Authentication Failed!',
+         error: err.message
+      });
+   }
+});
+
 // Route to add a new message
 router.post('/', catchAsyncErrors(async function (req, res, next) {
+   let decoded = jwt.decode(req.query.token);
+   let user = await User.findById(decoded.user._id);
    let message = new Message({
-      content: req.body.content
+      content: req.body.content,
+      user: user
    });
 
    let result = await message.save();
+   user.messages.push(result);
+   await user.save();
    return res.status(201).json({
       message: 'Successfully saved message!',
       resource: result
