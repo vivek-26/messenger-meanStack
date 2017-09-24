@@ -36,4 +36,9 @@ export class AuthService {
    logOut() {
       localStorage.clear()
    }
+
+   // To check if user is logged in
+   isLoggedIn() {
+      return localStorage.getItem('token') !== null
+   }
 }
