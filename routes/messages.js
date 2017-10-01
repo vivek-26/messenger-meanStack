@@ -23,7 +23,8 @@ function catchAsyncErrors(fn) {
 
 // Route to get all messages
 router.get('/', catchAsyncErrors(async function (req, res, next) {
-   let messages = await Message.find().exec();
+   let messages = await Message.find().populate('user', 'firstName')
+      .exec();
    return res.status(200).json({
       message: 'Successfully fetched messages!',
       resource: messages
@@ -63,11 +64,18 @@ router.post('/', catchAsyncErrors(async function (req, res, next) {
 
 // Route to update an existing message
 router.patch('/:id', catchAsyncErrors(async function (req, res, next) {
+   let decoded = jwt.decode(req.query.token);
    let message = await Message.findById(req.params.id);
    if (!message) {
       return res.status(404).json({
          title: 'An error occurred!',
          error: `Could not find any message with id - ${req.params.id}`
+      });
+   }
+   if (message.user != decoded.user._id) {
+      return res.status(401).json({
+         title: 'Authorization Failed!',
+         error: 'You are not authorized to modify this message!'
       });
    }
    message.content = req.body.content;
@@ -80,6 +88,7 @@ router.patch('/:id', catchAsyncErrors(async function (req, res, next) {
 
 // Route to delete an existing message
 router.delete('/:id', catchAsyncErrors(async function (req, res, next) {
+   let decoded = jwt.decode(req.query.token);
    let message = await Message.findById(req.params.id);
    if (!message) {
       return res.status(404).json({
@@ -87,7 +96,12 @@ router.delete('/:id', catchAsyncErrors(async function (req, res, next) {
          error: `Could not find any message with id - ${req.params.id}`
       });
    }
-
+   if (message.user != decoded.user._id) {
+      return res.status(401).json({
+         title: 'Authorization Failed!',
+         error: 'You are not authorized to delete this message!'
+      });
+   }
    let result = await message.remove();
    return res.status(200).json({
       message: 'Successfully deleted message!',
